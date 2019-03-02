@@ -331,10 +331,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (currentCalc.size() != 0)
 				{
 					if (currentCalc[currentCalc.size() - 1] != ')')
-						currentCalc += "5";
+						currentCalc += "6";
 				}
 				else
-					currentCalc += "5";
+					currentCalc += "6";
 			}
 			InvalidateRect(hWnd, NULL, TRUE);
 
@@ -415,7 +415,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 
 			if (currentCalc.size() != 0)
-				if (currentCalc[currentCalc.size() - 1] != ')' && check_points(currentCalc) && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
+				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != ')' && check_points(currentCalc) && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
 					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
 				currentCalc += ".";
 			InvalidateRect(hWnd, NULL, TRUE);
@@ -431,7 +431,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 
 			if (currentCalc.size() != 0)
-				if (currentCalc[currentCalc.size() - 1] != ')' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
+				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
 					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
 					currentCalc += "+";
 			InvalidateRect(hWnd, NULL, TRUE);
@@ -449,7 +449,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (currentCalc.size() == 0)
 				currentCalc += "-";
 			else
-				if (currentCalc[currentCalc.size() - 1] != ')' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
+				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
 					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
 					currentCalc += "-";
 			InvalidateRect(hWnd, NULL, TRUE);
@@ -465,7 +465,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 
 			if (currentCalc.size() != 0)
-				if (currentCalc[currentCalc.size() - 1] != ')' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
+				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
 					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
 					currentCalc += "*";
 			InvalidateRect(hWnd, NULL, TRUE);
@@ -481,7 +481,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 
 			if (currentCalc.size() != 0)
-				if (currentCalc[currentCalc.size() - 1] != ')' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
+				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
 					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
 					currentCalc += "/";
 			InvalidateRect(hWnd, NULL, TRUE);
@@ -512,7 +512,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 
-			currentCalc += ")";
+			if (currentCalc.size() != 0)
+				if (currentCalc[currentCalc.size() - 1] != '.')
+					currentCalc += ")";
 
 			InvalidateRect(hWnd, NULL, TRUE);
 

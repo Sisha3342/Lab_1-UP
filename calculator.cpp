@@ -142,6 +142,9 @@ double calculate_string(std::string str)
 	check_brackets_balance(str);
 	count_in_brackets(str);
 
+	if (str.size() == 0)
+		return 0;
+
 	if (str[str.size() - 1] == '*' || str[str.size() - 1] == '/' || str[str.size() - 1] == '+' || str[str.size() - 1] == '-' || str[str.size() - 1] == '.')
 		throw 4;
 
