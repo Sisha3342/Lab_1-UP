@@ -1,5 +1,0 @@
-tribon_list = [0, 0, 1]
-n = int(input('Input the amount of elements(n > 3): '))
-for i in range(3, n):
-    tribon_list.append(tribon_list[i - 1] + tribon_list[i - 2] + tribon_list[i - 3])
-print(tribon_list)
