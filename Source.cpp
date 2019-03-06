@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 #include "calculator.h"
-#define AM_OF_OPER 20
+#define AM_OF_OPER 23
 #define MAX_SIZE 20
 
 HINSTANCE hInst;
@@ -10,6 +10,7 @@ HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 bool check_zeros(std::string str);
 bool check_points(std::string str);
+bool syntax_is_correct(std::string str);
 
 int APIENTRY WinMain(HINSTANCE This, HINSTANCE Prev, LPTSTR cmd, int mode) 
 {
@@ -48,9 +49,10 @@ int APIENTRY WinMain(HINSTANCE This, HINSTANCE Prev, LPTSTR cmd, int mode)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	char oversize[] = "Calculation oversize! Too much operations/numbers";
 	static HWND buttons[AM_OF_OPER];
 	static std::string currentCalc;
-	static int cxClient = 500, cyClient = 500;
+	static double cxClient = 500, cyClient = 500;
 	HDC hdc;
 	PAINTSTRUCT ps;
 
@@ -85,9 +87,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			buttonName.clear();
 		}
 
-		std::string operations = ".+-*/()C<";
+		std::string operations = ".C<+-*/()|&^", sub_str;
 
-		for (int i = 0, xCoord = 0.3*cxClient, yCoord = 0.8*cyClient; i < operations.size(); i++)
+		for (int i = 0, xCoord = 0.3*cxClient, yCoord = 0.94*cyClient; i < operations.size(); i++)
 		{
 			if (i % 3 == 1)
 			{
@@ -97,14 +99,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			else
 				xCoord += 0.14*cxClient;
 
-			std::string sub_str = operations.substr(i, 1);
+			if (operations[i] == '&')
+				sub_str = "&&";
+			else
+				sub_str = operations.substr(i, 1);
 
 			buttons[i + 10] = CreateWindow("button", sub_str.c_str(), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, xCoord, yCoord,
 				0.06*(cxClient + cyClient), 0.06*(cxClient + cyClient), hWnd, (HMENU)(i + 10), hInst, NULL);
 		}
 
 		buttons[AM_OF_OPER - 1] = CreateWindow("button", "=", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0.3*cxClient, 0.8*cyClient,
-			0.06*(cxClient + cyClient), 0.06*(cxClient + cyClient), hWnd, (HMENU)19, hInst, NULL);
+			0.06*(cxClient + cyClient), 0.06*(cxClient + cyClient), hWnd, (HMENU)(AM_OF_OPER-1), hInst, NULL);
 
 		break;
 	}
@@ -157,7 +162,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		MoveWindow(buttons[0], 0.02*cxClient, 0.8*cyClient, 0.13*(cyClient + cxClient),
 			0.06*(cxClient + cyClient), TRUE);
 
-		for (int i = 10, xCoord = 0.3*cxClient, yCoord = 0.8*cyClient; i < AM_OF_OPER - 1; i++)
+		for (int i = 10, xCoord = 0.3*cxClient, yCoord = 0.94*cyClient; i < AM_OF_OPER - 1; i++)
 		{
 			if (i % 3 == 1)
 			{
@@ -189,7 +194,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -212,7 +217,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -234,7 +239,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -256,7 +261,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -278,7 +283,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -300,7 +305,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -322,7 +327,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -344,7 +349,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -366,7 +371,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -388,7 +393,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -410,48 +415,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
 			if (currentCalc.size() != 0)
-				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != ')' && check_points(currentCalc) && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
-					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
-				currentCalc += ".";
+				if (syntax_is_correct(currentCalc) && currentCalc[currentCalc.size() - 1] != ')' && check_points(currentCalc) && currentCalc[currentCalc.size() - 1] != '.')
+					currentCalc += ".";
 			InvalidateRect(hWnd, NULL, TRUE);
 
 			break;
 		}
 		case 11:
 		{
-			if (currentCalc.size() + 1 > MAX_SIZE)
-			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
-				break;
-			}
-
-			if (currentCalc.size() != 0)
-				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
-					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
-					currentCalc += "+";
+			currentCalc.clear();
 			InvalidateRect(hWnd, NULL, TRUE);
 
 			break;
 		}
 		case 12:
 		{
-			if (currentCalc.size() + 1 > MAX_SIZE)
-			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
-				break;
-			}
-
-			if (currentCalc.size() == 0)
-				currentCalc += "-";
-			else
-				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
-					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
-					currentCalc += "-";
+			if (currentCalc.size() != 0)
+				currentCalc.pop_back();
 			InvalidateRect(hWnd, NULL, TRUE);
 
 			break;
@@ -460,14 +445,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
 			if (currentCalc.size() != 0)
-				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
-					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
-					currentCalc += "*";
+				if (syntax_is_correct(currentCalc))
+					currentCalc += "+";
+
 			InvalidateRect(hWnd, NULL, TRUE);
 
 			break;
@@ -476,14 +461,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
-			if (currentCalc.size() != 0)
-				if (currentCalc[currentCalc.size() - 1] != '(' && currentCalc[currentCalc.size() - 1] != '+' && currentCalc[currentCalc.size() - 1] != '-' && currentCalc[currentCalc.size() - 1] != '.'
-					&& currentCalc[currentCalc.size() - 1] != '*' && currentCalc[currentCalc.size() - 1] != '/')
-					currentCalc += "/";
+			if (!currentCalc.size())
+				currentCalc += "-";
+			else
+				if (syntax_is_correct(currentCalc))
+					currentCalc += "-";
+
 			InvalidateRect(hWnd, NULL, TRUE);
 
 			break;
@@ -492,13 +479,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
-			if (currentCalc.size() == 0 || currentCalc[currentCalc.size() -1] == '+' || currentCalc[currentCalc.size() - 1] == '-' 
-				|| currentCalc[currentCalc.size() - 1] == '*'|| currentCalc[currentCalc.size() - 1] == '/' || currentCalc[currentCalc.size() - 1] == '(')
-					currentCalc += "(";
+			if (currentCalc.size() != 0)
+				if (syntax_is_correct(currentCalc))
+					currentCalc += "*";
 
 			InvalidateRect(hWnd, NULL, TRUE);
 
@@ -508,7 +495,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
-				MessageBox(hWnd, "Calculation oversize! Too much operations/numbers", "exception", message);
+				MessageBox(hWnd, oversize, "exception", message);
+				break;
+			}
+
+			if (currentCalc.size() != 0)
+				if (syntax_is_correct(currentCalc))
+					currentCalc += "/";
+
+			InvalidateRect(hWnd, NULL, TRUE);
+
+			break;
+		}
+		case 17:
+		{
+			if (currentCalc.size() + 1 > MAX_SIZE)
+			{
+				MessageBox(hWnd, oversize, "exception", message);
+				break;
+			}
+
+			if (currentCalc.size() == 0 || currentCalc[currentCalc.size() - 1] == '+' || currentCalc[currentCalc.size() - 1] == '-' || currentCalc[currentCalc.size() - 1] == '|' || currentCalc[currentCalc.size() - 1] == '&' || currentCalc[currentCalc.size() - 1] == '^'
+				|| currentCalc[currentCalc.size() - 1] == '*' || currentCalc[currentCalc.size() - 1] == '/' || currentCalc[currentCalc.size() - 1] == '(')
+				currentCalc += "(";
+
+			InvalidateRect(hWnd, NULL, TRUE);
+
+			break;
+		}
+		case 18:
+		{
+			if (currentCalc.size() + 1 > MAX_SIZE)
+			{
+				MessageBox(hWnd, oversize, "exception", message);
 				break;
 			}
 
@@ -520,23 +539,52 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			break;
 		}
-		case 17:
-		{
-			currentCalc.clear();
-
-			InvalidateRect(hWnd, NULL, TRUE);
-
-			break;
-		}
-		case 18:
-		{
-			if (currentCalc.size() != 0)
-				currentCalc.pop_back();
-			InvalidateRect(hWnd, NULL, TRUE);
-
-			break;
-		}
 		case 19:
+		{
+			if (currentCalc.size() + 1 > MAX_SIZE)
+			{
+				MessageBox(hWnd, oversize, "exception", message);
+				break;
+			}
+
+			if (currentCalc.size() != 0)
+				if (syntax_is_correct(currentCalc))
+					currentCalc += "|";
+
+			InvalidateRect(hWnd, NULL, TRUE);
+			break;
+		}
+		case 20:
+		{
+			if (currentCalc.size() + 1 > MAX_SIZE)
+			{
+				MessageBox(hWnd, oversize, "exception", message);
+				break;
+			}
+
+			if (currentCalc.size() != 0)
+				if (syntax_is_correct(currentCalc))
+					currentCalc += "&";
+
+			InvalidateRect(hWnd, NULL, TRUE);
+			break;
+		}
+		case 21:
+		{
+			if (currentCalc.size() + 1 > MAX_SIZE)
+			{
+				MessageBox(hWnd, oversize, "exception", message);
+				break;
+			}
+
+			if (currentCalc.size() != 0)
+				if (syntax_is_correct(currentCalc))
+					currentCalc += "^";
+
+			InvalidateRect(hWnd, NULL, TRUE);
+			break;
+		}
+		case AM_OF_OPER - 1:
 		{
 			if (currentCalc.size() != 0)
 			{
@@ -545,7 +593,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				try
 				{
-					result = calculate_string(currentCalc);
+					result = calculate_string_binary(currentCalc);
 				}
 				catch (int code)
 				{
@@ -557,8 +605,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						MessageBox(hWnd, "Incorrect brackets balance", "exception", message);
 					else if (code == 3)
 						MessageBox(hWnd, "You can't divide by 0", "exception", message);
-					else
+					else if (code == 4)
 						MessageBox(hWnd, "Incorrect operations usage", "exception", message);
+					else
+						MessageBox(hWnd, "Incorrect binary operations usage! There is a double value!", "exception", message);
 
 					break;
 				}
@@ -595,7 +645,7 @@ bool check_zeros(std::string str)
 		bool flag = false;
 		int i = str.size() - 1;
 		for (; i >= 0 && str[i] != '+' && str[i] != '-' && str[i] != '/'
-			&& str[i] != '*'; i--)
+			&& str[i] != '*' && str[i] != '|' && str[i] != '&' && str[i] != '^'; i--)
 		{
 			if (str[i] != '0')
 			{
@@ -614,10 +664,20 @@ bool check_points(std::string str)
 	int i = str.size() - 1;
 
 	for (; i >= 0 && str[i] != '+' && str[i] != '-' && str[i] != '/'
-		&& str[i] != '*'; i--)
+		&& str[i] != '*' && str[i] != '|' && str[i] != '&' && str[i] != '^'; i--)
 	{
 		if (str[i] == '.')
 			return false;
 	}
+	return true;
+}
+
+bool syntax_is_correct(std::string str)
+{
+	char operations[] = "(+-.*/|&^";
+
+	for (int i = 0; operations[i] != '\0'; i++)
+		if (str[str.size() - 1] == operations[i])
+			return false;
 	return true;
 }

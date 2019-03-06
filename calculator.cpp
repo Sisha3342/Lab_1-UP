@@ -1,5 +1,17 @@
 #include "calculator.h"
 
+template <typename T>
+bool is_double(T value)
+{
+	std::string help_str;
+	std::stringstream oss;
+	oss << value;
+	oss >> help_str;
+	if (help_str.find('.') == std::string::npos)
+		return false;
+	return true;
+}
+
 void check_brackets_balance(std::string str)
 {
 	int left_count = 0, right_count = 0;
@@ -32,7 +44,7 @@ void put_pluses(std::string& str)
 		}
 }
 
-bool check_for_operations(std::string str)
+bool check_for_operations_mult_div(std::string str)
 {
 	char operations[] = "*/";
 	for (int i = 0; operations[i] != '\0'; i++)
@@ -46,6 +58,24 @@ bool check_for_brackets(std::string str)
 	char brackets[] = "(";
 	for (int i = 0; i < brackets[i] != '\0'; i++)
 		if (str.find(brackets[i]) != std::string::npos)
+			return true;
+	return false;
+}
+
+bool check_for_arith(std::string str)
+{
+	char operations[] = "+-*/";
+	for (int i = 0; operations[i] != '\0'; i++)
+		if (str.find(operations[i]) != std::string::npos)
+			return true;
+	return false;
+}
+
+bool check_for_binary(std::string str)
+{
+	char operations[] = "|^&";
+	for (int i = 0; operations[i] != '\0'; i++)
+		if (str.find(operations[i]) != std::string::npos)
 			return true;
 	return false;
 }
@@ -85,7 +115,7 @@ std::string count_mult_div(std::string str)
 
 			value /= value1;
 		}
-
+		operation = str[index];
 		index++;
 		sub_str.clear();
 	}
@@ -125,7 +155,7 @@ void count_in_brackets(std::string& str)
 		sub_str.push_back(str[i]);
 	}
 
-	double value = calculate_string(sub_str);
+	double value = calculate_string_binary(sub_str);
 
 	std::stringstream oss;
 	oss << value;
@@ -139,15 +169,6 @@ void count_in_brackets(std::string& str)
 
 double calculate_string(std::string str)
 {
-	check_brackets_balance(str);
-	count_in_brackets(str);
-
-	if (str.size() == 0)
-		return 0;
-
-	if (str[str.size() - 1] == '*' || str[str.size() - 1] == '/' || str[str.size() - 1] == '+' || str[str.size() - 1] == '-' || str[str.size() - 1] == '.')
-		throw 4;
-
 	double value = 0; std::string sub_str;
 
 	put_pluses(str);
@@ -160,7 +181,7 @@ double calculate_string(std::string str)
 			i++;
 		}
 
-		if (check_for_operations(sub_str))
+		if (check_for_operations_mult_div(sub_str))
 			sub_str = count_mult_div(sub_str);
 
 		value += std::stod(sub_str);
@@ -168,6 +189,60 @@ double calculate_string(std::string str)
 		sub_str.clear();
 	}
 
+
+	return value;
+}
+
+double calculate_string_binary(std::string str)
+{
+	if (str.size() == 0)
+		return 0;
+
+	if (str[str.size() - 1] == '*' || str[str.size() - 1] == '/' || str[str.size() - 1] == '+' || str[str.size() - 1] == '-' || str[str.size() - 1] == '.' || str[str.size() - 1] == '|' || str[str.size() - 1] == '&' || str[str.size() - 1] == '^')
+		throw 4;
+
+	check_brackets_balance(str);
+	count_in_brackets(str);
+
+	if (!check_for_binary(str))
+		return calculate_string(str);
+
+	char operation = '0';
+	int value = 0;
+	std::string sub_str;
+
+	for (int i = 0; i < str.size(); i++)
+	{
+
+		while (str[i] != '|' && str[i] != '&' && str[i] != '^' && i < str.size())
+		{
+			sub_str.push_back(str[i]);
+			i++;
+		}
+
+		if (check_for_arith(sub_str))
+		{
+			std::stringstream oss;
+			oss << calculate_string(sub_str);
+			oss >> sub_str;
+		}
+
+		if (is_double(sub_str))
+			throw - 1;
+
+		if (operation == '0')
+			value = std::stoi(sub_str);
+		else if (operation == '^')
+			value ^= std::stoi(sub_str);
+		else if (operation == '|')
+			value |= std::stoi(sub_str);
+		else
+			value &= std::stoi(sub_str);
+
+		operation = str[i];
+
+		sub_str.clear();
+	}
 
 	return value;
 }
