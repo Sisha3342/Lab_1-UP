@@ -73,7 +73,7 @@ bool check_for_arith(std::string str)
 
 bool check_for_binary(std::string str)
 {
-	char operations[] = "|^&";
+	char operations[] = "|^&<>";
 	for (int i = 0; operations[i] != '\0'; i++)
 		if (str.find(operations[i]) != std::string::npos)
 			return true;
@@ -198,7 +198,9 @@ double calculate_string_binary(std::string str)
 	if (str.size() == 0)
 		return 0;
 
-	if (str[str.size() - 1] == '*' || str[str.size() - 1] == '/' || str[str.size() - 1] == '+' || str[str.size() - 1] == '-' || str[str.size() - 1] == '.' || str[str.size() - 1] == '|' || str[str.size() - 1] == '&' || str[str.size() - 1] == '^')
+	char oper_list[] = "*/+-.|&^<>";
+
+	if (strchr(oper_list, str[str.size() - 1]))
 		throw 4;
 
 	check_brackets_balance(str);
@@ -210,11 +212,12 @@ double calculate_string_binary(std::string str)
 	char operation = '0';
 	int value = 0;
 	std::string sub_str;
+	char binary_list[] = "|&^<>";
 
 	for (int i = 0; i < str.size(); i++)
 	{
 
-		while (str[i] != '|' && str[i] != '&' && str[i] != '^' && i < str.size())
+		while (!strchr(binary_list, str[i]) && i < str.size())
 		{
 			sub_str.push_back(str[i]);
 			i++;
@@ -228,7 +231,7 @@ double calculate_string_binary(std::string str)
 		}
 
 		if (is_double(sub_str))
-			throw - 1;
+			throw -1;
 
 		if (operation == '0')
 			value = std::stoi(sub_str);
@@ -236,10 +239,17 @@ double calculate_string_binary(std::string str)
 			value ^= std::stoi(sub_str);
 		else if (operation == '|')
 			value |= std::stoi(sub_str);
+		else if (operation == '<')
+			value <<= std::stoi(sub_str);
+		else if (operation == '>')
+			value >>= std::stoi(sub_str);
 		else
 			value &= std::stoi(sub_str);
 
 		operation = str[i];
+
+		if (operation == '<' || operation == '>')
+			i++;
 
 		sub_str.clear();
 	}

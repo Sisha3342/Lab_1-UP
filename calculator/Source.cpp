@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 #include "calculator.h"
-#define AM_OF_OPER 23
+#define AM_OF_OPER 25
 #define MAX_SIZE 20
 
 HINSTANCE hInst;
@@ -87,11 +87,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			buttonName.clear();
 		}
 
-		std::string operations = ".C<+-*/()|&^", sub_str;
+		std::string operations = ".C<+-*/()|&^$>", sub_str;
 
-		for (int i = 0, xCoord = 0.3*cxClient, yCoord = 0.94*cyClient; i < operations.size(); i++)
+		for (int i = 0, xCoord = 0.3*cxClient, yCoord = 0.8*cyClient; i < operations.size(); i++)
 		{
-			if (i % 3 == 1)
+			if (i % 4 == 1 && i != 1)
 			{
 				yCoord -= 0.14*cyClient;
 				xCoord = 0.44*cxClient;
@@ -101,6 +101,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			if (operations[i] == '&')
 				sub_str = "&&";
+			else if (operations[i] == '$')
+				sub_str = "<<";
+			else if (operations[i] == '>')
+				sub_str = ">>";
 			else
 				sub_str = operations.substr(i, 1);
 
@@ -162,9 +166,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		MoveWindow(buttons[0], 0.02*cxClient, 0.8*cyClient, 0.13*(cyClient + cxClient),
 			0.06*(cxClient + cyClient), TRUE);
 
-		for (int i = 10, xCoord = 0.3*cxClient, yCoord = 0.94*cyClient; i < AM_OF_OPER - 1; i++)
+		for (int i = 0, xCoord = 0.3*cxClient, yCoord = 0.8*cyClient; i < AM_OF_OPER - 11; i++)
 		{
-			if (i % 3 == 1)
+			if (i % 4 == 1 && i != 1)
 			{
 				yCoord -= 0.14*cyClient;
 				xCoord = 0.44*cxClient;
@@ -172,7 +176,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			else
 				xCoord += 0.14*cxClient;
 
-			MoveWindow(buttons[i], xCoord, yCoord, 0.06*(cxClient + cyClient), 0.06*(cxClient + cyClient), TRUE);
+			MoveWindow(buttons[i + 10], xCoord, yCoord, 0.06*(cxClient + cyClient), 0.06*(cxClient + cyClient), TRUE);
 		}
 
 		MoveWindow(buttons[AM_OF_OPER - 1], temp_coord, 0.8*cyClient,
@@ -437,6 +441,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (currentCalc.size() != 0)
 				currentCalc.pop_back();
+			
+			if (currentCalc.size() != 0 && (currentCalc[currentCalc.size() - 1] == '<' || currentCalc[currentCalc.size() - 1] == '>'))
+				currentCalc.pop_back();
+
 			InvalidateRect(hWnd, NULL, TRUE);
 
 			break;
@@ -584,6 +592,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;
 		}
+		case 22:
+		{
+			if (currentCalc.size() + 1 > MAX_SIZE)
+			{
+				MessageBox(hWnd, oversize, "exception", message);
+				break;
+			}
+
+			if (currentCalc.size() != 0)
+				if (syntax_is_correct(currentCalc))
+					currentCalc += "<<";
+
+			InvalidateRect(hWnd, NULL, TRUE);
+			break;
+		}
+		case 23:
+		{
+			if (currentCalc.size() + 1 > MAX_SIZE)
+			{
+				MessageBox(hWnd, oversize, "exception", message);
+				break;
+			}
+
+			if (currentCalc.size() != 0)
+				if (syntax_is_correct(currentCalc))
+					currentCalc += ">>";
+
+			InvalidateRect(hWnd, NULL, TRUE);
+			break;
+		}
 		case AM_OF_OPER - 1:
 		{
 			if (currentCalc.size() != 0)
@@ -638,14 +676,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 bool check_zeros(std::string str)
 {
+	char oper_list[] = "+-/*|&^<>";
+
 	if (str.size() == 0)
 		return true;
 	else
 	{
 		bool flag = false;
 		int i = str.size() - 1;
-		for (; i >= 0 && str[i] != '+' && str[i] != '-' && str[i] != '/'
-			&& str[i] != '*' && str[i] != '|' && str[i] != '&' && str[i] != '^'; i--)
+		for (; i >= 0 && !strchr(oper_list, str[i]); i--)
 		{
 			if (str[i] != '0')
 			{
@@ -663,8 +702,9 @@ bool check_points(std::string str)
 {
 	int i = str.size() - 1;
 
-	for (; i >= 0 && str[i] != '+' && str[i] != '-' && str[i] != '/'
-		&& str[i] != '*' && str[i] != '|' && str[i] != '&' && str[i] != '^'; i--)
+	char oper_list[] = "+-/*|&^<>";
+
+	for (; i >= 0 && !strchr(oper_list, str[i]); i--)
 	{
 		if (str[i] == '.')
 			return false;
@@ -674,7 +714,7 @@ bool check_points(std::string str)
 
 bool syntax_is_correct(std::string str)
 {
-	char operations[] = "(+-.*/|&^";
+	char operations[] = "(+-.*/|&^<>";
 
 	for (int i = 0; operations[i] != '\0'; i++)
 		if (str[str.size() - 1] == operations[i])
