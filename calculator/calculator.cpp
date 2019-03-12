@@ -24,11 +24,11 @@ void check_brackets_balance(std::string str)
 			right_count++;
 
 		if (right_count > left_count)
-			throw 1;
+			throw "Incorrect brackets positioning";
 	}
 
 	if (left_count != right_count)
-		throw 2;
+		throw "Incorrect brackets balance";
 }
 
 void put_pluses(std::string& str)
@@ -64,7 +64,7 @@ bool check_for_brackets(std::string str)
 
 bool check_for_arith(std::string str)
 {
-	char operations[] = "+-*/";
+	char operations[] = "+-*/!";
 	for (int i = 0; operations[i] != '\0'; i++)
 		if (str.find(operations[i]) != std::string::npos)
 			return true;
@@ -73,7 +73,7 @@ bool check_for_arith(std::string str)
 
 bool check_for_binary(std::string str)
 {
-	char operations[] = "|^&<>";
+	char operations[] = "|^&<>~";
 	for (int i = 0; operations[i] != '\0'; i++)
 		if (str.find(operations[i]) != std::string::npos)
 			return true;
@@ -111,7 +111,7 @@ std::string count_mult_div(std::string str)
 		else
 		{
 			if (value1 == 0)
-				throw 3;
+				throw "You can't divide by 0";
 
 			value /= value1;
 		}
@@ -163,7 +163,7 @@ void count_in_brackets(std::string& str)
 	if (value < 0 && start_index != 0)
 		if (str[start_index - 1] == '+')
 			start_index--;
-	str.replace(start_index, i - start_index, sub_str);
+	str.replace(start_index, i - start_index + 1, sub_str);
 	count_in_brackets(str);
 }
 
@@ -180,6 +180,9 @@ double calculate_string(std::string str)
 			sub_str.push_back(str[i]);
 			i++;
 		}
+
+		if (sub_str.find('!') != std::string::npos)
+			replace_factorial(sub_str);
 
 		if (check_for_operations_mult_div(sub_str))
 			sub_str = count_mult_div(sub_str);
@@ -198,10 +201,10 @@ double calculate_string_binary(std::string str)
 	if (str.size() == 0)
 		return 0;
 
-	char oper_list[] = "*/+-.|&^<>";
+	char oper_list[] = "*/+-.|&^<>~";
 
 	if (strchr(oper_list, str[str.size() - 1]))
-		throw 4;
+		throw "Incorrect operations usage! There must be a number after operation symbol";
 
 	check_brackets_balance(str);
 	count_in_brackets(str);
@@ -223,6 +226,9 @@ double calculate_string_binary(std::string str)
 			i++;
 		}
 
+		if (sub_str.find('~') != std::string::npos)
+			replace_not(sub_str);
+
 		if (check_for_arith(sub_str))
 		{
 			std::stringstream oss;
@@ -231,20 +237,29 @@ double calculate_string_binary(std::string str)
 		}
 
 		if (is_double(sub_str))
-			throw -1;
+			throw "You can't use binary operations with float numbers";
 
-		if (operation == '0')
+		switch(operation)
+		{
+		case '0':
 			value = std::stoi(sub_str);
-		else if (operation == '^')
+			break;
+		case '^':
 			value ^= std::stoi(sub_str);
-		else if (operation == '|')
+			break;
+		case '|':
 			value |= std::stoi(sub_str);
-		else if (operation == '<')
+			break;
+		case '<':
 			value <<= std::stoi(sub_str);
-		else if (operation == '>')
+			break;
+		case '>':
 			value >>= std::stoi(sub_str);
-		else
+			break;
+		default:
 			value &= std::stoi(sub_str);
+			break;
+		}
 
 		operation = str[i];
 
@@ -255,4 +270,84 @@ double calculate_string_binary(std::string str)
 	}
 
 	return value;
+}
+
+int factorial(int value)
+{
+	if (value == 0)
+		return 1;
+
+	return value * factorial(value - 1);
+}
+
+void replace_factorial(std::string& str)
+{
+	std::string sub_str;
+	int start_index = 0, end_index, count = 1;
+
+	while (str[start_index] != '!')
+		start_index++;
+
+	end_index = start_index - 1;
+
+	while (end_index != -1 )
+	{
+		if (str[end_index] == '.')
+			throw "You can't use '!' with float numbers";
+
+		if (isdigit(str[end_index]))
+		{
+			end_index--;
+			count++;
+		}
+		else
+			break;
+	}
+
+	int value = std::stoi(str.substr(++end_index, count));
+
+	if (value >= 10)
+		throw "Too large number from factorial function!";
+
+	value = factorial(value);
+
+	std::stringstream oss;
+	oss << value;
+	oss >> sub_str;
+
+	str.replace(end_index, count, sub_str);
+}
+
+void replace_not(std::string& str)
+{
+	std::string sub_str;
+	int start_index = 0, count = 1;
+
+	while (str[start_index] != '~')
+		start_index++;
+
+	int end_index = start_index + 1;
+
+	while (end_index != str.size())
+	{
+		if (str[end_index] == '.')
+			throw "You can't use '~' with float numbers";
+
+		if (isdigit(str[end_index]))
+		{
+			end_index++;
+			count++;
+		}
+		else
+			break;
+	}
+
+	int value = std::stoi(str.substr(start_index + 1, count - 1));
+	value = ~value;
+
+	std::stringstream oss;
+	oss << value;
+	oss >> sub_str;
+
+	str.replace(start_index, count, sub_str);
 }

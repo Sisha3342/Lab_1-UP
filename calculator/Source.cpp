@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 #include "calculator.h"
-#define AM_OF_OPER 25
+#define AM_OF_OPER 27
 #define MAX_SIZE 20
 
 HINSTANCE hInst;
@@ -87,11 +87,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			buttonName.clear();
 		}
 
-		std::string operations = ".C<+-*/()|&^$>", sub_str;
+		std::string operations = ".C<!+-*/()|&^$>~", sub_str;
 
 		for (int i = 0, xCoord = 0.3*cxClient, yCoord = 0.8*cyClient; i < operations.size(); i++)
 		{
-			if (i % 4 == 1 && i != 1)
+			if (i % 4 == 0 && i != 0)
 			{
 				yCoord -= 0.14*cyClient;
 				xCoord = 0.44*cxClient;
@@ -168,7 +168,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		for (int i = 0, xCoord = 0.3*cxClient, yCoord = 0.8*cyClient; i < AM_OF_OPER - 11; i++)
 		{
-			if (i % 4 == 1 && i != 1)
+			if (i % 4 == 0 && i != 0)
 			{
 				yCoord -= 0.14*cyClient;
 				xCoord = 0.44*cxClient;
@@ -424,7 +424,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 
 			if (currentCalc.size() != 0)
-				if (syntax_is_correct(currentCalc) && currentCalc[currentCalc.size() - 1] != ')' && check_points(currentCalc) && currentCalc[currentCalc.size() - 1] != '.')
+				if (syntax_is_correct(currentCalc) && currentCalc[currentCalc.size() - 1] != ')' 
+					&& check_points(currentCalc) && currentCalc[currentCalc.size() - 1] != '.' && currentCalc[currentCalc.size() - 1] != '!')
 					currentCalc += ".";
 			InvalidateRect(hWnd, NULL, TRUE);
 
@@ -459,7 +460,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			if (currentCalc.size() != 0)
 				if (syntax_is_correct(currentCalc))
-					currentCalc += "+";
+					currentCalc += "!";
 
 			InvalidateRect(hWnd, NULL, TRUE);
 
@@ -473,11 +474,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 
-			if (!currentCalc.size())
-				currentCalc += "-";
-			else
+			if (currentCalc.size() != 0)
 				if (syntax_is_correct(currentCalc))
-					currentCalc += "-";
+					currentCalc += "+";
 
 			InvalidateRect(hWnd, NULL, TRUE);
 
@@ -491,9 +490,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 
-			if (currentCalc.size() != 0)
-				if (syntax_is_correct(currentCalc))
-					currentCalc += "*";
+			if (!currentCalc.size())
+				currentCalc += "-";
+			else if (syntax_is_correct(currentCalc) && !isdigit(currentCalc[currentCalc.size() - 1]) && currentCalc[currentCalc.size() - 1] != ')')
+				currentCalc += "-";
+			else
+				if (currentCalc[currentCalc.size() - 1] == '(')
+					currentCalc += "-";
 
 			InvalidateRect(hWnd, NULL, TRUE);
 
@@ -509,13 +512,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			if (currentCalc.size() != 0)
 				if (syntax_is_correct(currentCalc))
-					currentCalc += "/";
+					currentCalc += "*";
 
 			InvalidateRect(hWnd, NULL, TRUE);
 
 			break;
 		}
 		case 17:
+		{
+			if (currentCalc.size() + 1 > MAX_SIZE)
+			{
+				MessageBox(hWnd, oversize, "exception", message);
+				break;
+			}
+
+			if (currentCalc.size() != 0)
+				if (syntax_is_correct(currentCalc))
+					currentCalc += "/";
+
+			InvalidateRect(hWnd, NULL, TRUE);
+
+			break;
+		}
+		case 18:
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
@@ -531,7 +550,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			break;
 		}
-		case 18:
+		case 19:
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
@@ -547,7 +566,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			break;
 		}
-		case 19:
+		case 20:
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
@@ -562,7 +581,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;
 		}
-		case 20:
+		case 21:
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
@@ -577,7 +596,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;
 		}
-		case 21:
+		case 22:
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
@@ -592,7 +611,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;
 		}
-		case 22:
+		case 23:
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
@@ -607,7 +626,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;
 		}
-		case 23:
+		case 24:
 		{
 			if (currentCalc.size() + 1 > MAX_SIZE)
 			{
@@ -618,6 +637,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (currentCalc.size() != 0)
 				if (syntax_is_correct(currentCalc))
 					currentCalc += ">>";
+
+			InvalidateRect(hWnd, NULL, TRUE);
+			break;
+		}
+		case 25:
+		{
+			if (currentCalc.size() + 1 > MAX_SIZE)
+			{
+				MessageBox(hWnd, oversize, "exception", message);
+				break;
+			}
+
+			if (!currentCalc.size())
+				currentCalc += "~";
+			else if (syntax_is_correct(currentCalc) && !isdigit(currentCalc[currentCalc.size() - 1]) 
+				&& currentCalc[currentCalc.size() - 1] != ')' && currentCalc[currentCalc.size() - 1] != '!')
+				currentCalc += "~";
+			else
+				if (currentCalc[currentCalc.size() - 1] == '(')
+					currentCalc += "~";
 
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;
@@ -633,20 +672,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				{
 					result = calculate_string_binary(currentCalc);
 				}
-				catch (int code)
+				catch (const char* err)
 				{
 					MessageBeep(0);
 
-					if (code == 1)
-						MessageBox(hWnd, "Incorrect brackets positioning", "exception", message);
-					else if (code == 2)
-						MessageBox(hWnd, "Incorrect brackets balance", "exception", message);
-					else if (code == 3)
-						MessageBox(hWnd, "You can't divide by 0", "exception", message);
-					else if (code == 4)
-						MessageBox(hWnd, "Incorrect operations usage", "exception", message);
-					else
-						MessageBox(hWnd, "Incorrect binary operations usage! There is a double value!", "exception", message);
+					MessageBox(hWnd, err, "exception", message);
 
 					break;
 				}
@@ -676,7 +706,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 bool check_zeros(std::string str)
 {
-	char oper_list[] = "+-/*|&^<>";
+	char oper_list[] = "+-/*|&^<>~";
 
 	if (str.size() == 0)
 		return true;
@@ -702,7 +732,7 @@ bool check_points(std::string str)
 {
 	int i = str.size() - 1;
 
-	char oper_list[] = "+-/*|&^<>";
+	char oper_list[] = "+-/*|&^<>~";
 
 	for (; i >= 0 && !strchr(oper_list, str[i]); i--)
 	{
@@ -713,8 +743,8 @@ bool check_points(std::string str)
 }
 
 bool syntax_is_correct(std::string str)
-{
-	char operations[] = "(+-.*/|&^<>";
+{		
+	char operations[] = "(+-.*/|&^<>~";
 
 	for (int i = 0; operations[i] != '\0'; i++)
 		if (str[str.size() - 1] == operations[i])

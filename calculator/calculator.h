@@ -10,5 +10,8 @@ bool check_for_arith(std::string str);
 bool check_for_binary(std::string str);
 void check_brackets_balance(std::string str);
 std::string count_mult_div_mult_div(std::string str);
+void replace_factorial(std::string& str);
+int factorial(int value);
+void replace_not(std::string& str);
 void count_in_brackets(std::string& str);
 void put_pluses(std::string& str);
