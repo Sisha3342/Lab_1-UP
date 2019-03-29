@@ -1,5 +1,5 @@
 #pragma once
-#include <iostream>
+#include <atltime.h>
 
-void encrypt(char* buffer, char* to_encrypt, int const& word_size, char* keyword, char** square);
-void create_square(char** Vig_square, char* language, int letters_count);
+void encrypt(char* buffer, char* to_encrypt, int const& word_size, CString keyword, char** square);
+void create_square(char** Vig_square, const char* language, int letters_count);

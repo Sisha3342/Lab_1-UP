@@ -1,6 +1,7 @@
+#include "stdafx.h"
 #include "encrypt.h"
 
-void create_square(char** Vig_square, char* language, int letters_count)
+void create_square(char** Vig_square, const char* language, int letters_count)
 {
 	char s = 'a', c;
 
@@ -37,9 +38,9 @@ void create_square(char** Vig_square, char* language, int letters_count)
 	}
 }
 
-void encrypt(char* buffer, char* to_encrypt, int const& word_size, char* keyword, char** square)
+void encrypt(char* buffer, char* to_encrypt, int const& word_size, CString keyword, char** square)
 {
-	int const letters_count = strlen(square[0]), key_size = strlen(keyword);
+	int const letters_count = strlen(square[0]), key_size = keyword.GetLength();
 	
 	int index1, index2; 
 

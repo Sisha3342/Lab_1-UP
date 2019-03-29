@@ -19,7 +19,6 @@
 #include <afxwin.h>         // основные и стандартные компоненты MFC
 #include <afxext.h>         // расширения MFC
 
-
 #include <afxdisp.h>        // классы автоматизации MFC
 
 
