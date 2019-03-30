@@ -63,7 +63,6 @@ void CVigenereencryptDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_KEY, keyword_edit);
 	DDX_Control(pDX, IDC_RADIO_ENG, ENG_RADIO);
 	DDX_Control(pDX, IDC_RADIO_RUS, RUS_RADIO);
-	DDX_Control(pDX, IDC_RADIO_GREC, GREC_RADIO);
 }
 
 BEGIN_MESSAGE_MAP(CVigenereencryptDlg, CDialogEx)
@@ -190,39 +189,26 @@ void CVigenereencryptDlg::OnBnClickedButtonEncr()
 	inp.close();
 	char* encrypted = new char[strlen(to_encrypt + 1)];
 	char** vig_square;
+	int letters_count = 0;
 	std::string language;
-	int letters_count;
 
-	if(ENG_RADIO.GetCheck())
+	if (ENG_RADIO.GetCheck())
 	{
-		vig_square = new char*[28];
-		for (int i = 0; i < 28; i++)
-			vig_square[i] = new char[28];
-
-		language = "Eng";
 		letters_count = 26;
-	}
-	else if(RUS_RADIO.GetCheck())
-	{
-		vig_square = new char*[33];
-		for (int i = 0; i < 33; i++)
-			vig_square[i] = new char[33];
-
-		language = "Rus";
-		letters_count = 33;
+		language = "Eng";
 	}
 	else
 	{
-		vig_square = new char*[24];
-		for (int i = 0; i < 24; i++)
-			vig_square[i] = new char[24];
-
-		language = "Grec";
-		letters_count = 24;
+		letters_count = 33;
+		language = "Rus";
 	}
 
+	vig_square = new char*[letters_count + 2];
+	for (int i = 0; i < letters_count + 2; i++)
+		vig_square[i] = new char[letters_count + 2];
+
 	create_square(vig_square, language.c_str(), letters_count);
-	encrypt(encrypted, to_encrypt, strlen(to_encrypt), keyword, vig_square);
+	encrypt(encrypted, to_encrypt, strlen(to_encrypt), keyword, vig_square, language.c_str());
 
 	std::ofstream out(out_file_name);
 	out << encrypted;

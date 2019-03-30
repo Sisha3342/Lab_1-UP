@@ -18,9 +18,10 @@
 
 #include <afxwin.h>         // основные и стандартные компоненты MFC
 #include <afxext.h>         // расширения MFC
-
 #include <afxdisp.h>        // классы автоматизации MFC
-
+void encrypt(char* buffer, char* to_encrypt, int const& word_size, CString keyword, char** square, const char* language);
+void create_square(char** Vig_square, const char* language, int letters_count);
+int my_strchr(char* str, char c, bool if_rus);
 
 
 #ifndef _AFX_NO_OLE_SUPPORT

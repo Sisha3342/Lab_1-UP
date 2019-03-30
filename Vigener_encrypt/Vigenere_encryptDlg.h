@@ -42,5 +42,4 @@ public:
 	CEdit keyword_edit;
 	CButton ENG_RADIO;
 	CButton RUS_RADIO;
-	CButton GREC_RADIO;
 };
