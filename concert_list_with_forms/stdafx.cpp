@@ -104,7 +104,11 @@ void concert_list::sort_by_name()
 {
 	std::sort(list_.begin(), list_.end(), [](concert const& c1, concert const& c2) -> bool
 	{
-		return c1.name < c2.name;
+		std::string temp1 = c1.name, temp2 = c2.name;
+		std::transform(temp1.begin(), temp1.end(), temp1.begin(), tolower);
+		std::transform(temp2.begin(), temp2.end(), temp2.begin(), tolower);
+
+		return temp1 < temp2;
 	});
 }
 

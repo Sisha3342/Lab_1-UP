@@ -20,6 +20,7 @@ namespace CppCLR_WinformsProjekt {
 			InitializeComponent();
 
 			open_file_dialog->Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
+			save_file_dialog->Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
 		}
 
 	protected:
@@ -52,6 +53,10 @@ namespace CppCLR_WinformsProjekt {
 	private: System::Windows::Forms::Label^  concert_capacity_label;
 	private: System::Windows::Forms::Label^  concert_date_label;
 	private: System::Windows::Forms::Button^  add_button;
+	private: System::Windows::Forms::Button^  back_button;
+	private: System::Windows::Forms::SaveFileDialog^  save_file_dialog;
+
+	private: System::ComponentModel::IContainer^  components;
 
 
 
@@ -79,7 +84,7 @@ namespace CppCLR_WinformsProjekt {
 		/// <summary>
 		/// Erforderliche Designervariable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -103,6 +108,8 @@ namespace CppCLR_WinformsProjekt {
 			this->concert_capacity_label = (gcnew System::Windows::Forms::Label());
 			this->concert_date_label = (gcnew System::Windows::Forms::Label());
 			this->add_button = (gcnew System::Windows::Forms::Button());
+			this->back_button = (gcnew System::Windows::Forms::Button());
+			this->save_file_dialog = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->SuspendLayout();
 			// 
 			// from_file_button
@@ -139,6 +146,7 @@ namespace CppCLR_WinformsProjekt {
 			this->sort_name_button->TabIndex = 2;
 			this->sort_name_button->Text = L"Sort concerts by name";
 			this->sort_name_button->UseVisualStyleBackColor = true;
+			this->sort_name_button->Click += gcnew System::EventHandler(this, &Form1::sort_name_button_Click);
 			// 
 			// sort_date_button
 			// 
@@ -150,6 +158,7 @@ namespace CppCLR_WinformsProjekt {
 			this->sort_date_button->TabIndex = 3;
 			this->sort_date_button->Text = L"Sort concerts by date";
 			this->sort_date_button->UseVisualStyleBackColor = true;
+			this->sort_date_button->Click += gcnew System::EventHandler(this, &Form1::sort_date_button_Click);
 			// 
 			// save_button
 			// 
@@ -161,6 +170,7 @@ namespace CppCLR_WinformsProjekt {
 			this->save_button->TabIndex = 5;
 			this->save_button->Text = L"Save the list to the file";
 			this->save_button->UseVisualStyleBackColor = true;
+			this->save_button->Click += gcnew System::EventHandler(this, &Form1::save_button_Click);
 			// 
 			// list_show_box
 			// 
@@ -288,13 +298,27 @@ namespace CppCLR_WinformsProjekt {
 			this->add_button->Text = L"Add";
 			this->add_button->UseVisualStyleBackColor = true;
 			this->add_button->Visible = false;
-			this->add_button->Click += gcnew System::EventHandler(this, &Form1::button1_Click);
+			this->add_button->Click += gcnew System::EventHandler(this, &Form1::add_button_Click);
+			// 
+			// back_button
+			// 
+			this->back_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->back_button->Location = System::Drawing::Point(358, 313);
+			this->back_button->Name = L"back_button";
+			this->back_button->Size = System::Drawing::Size(79, 33);
+			this->back_button->TabIndex = 18;
+			this->back_button->Text = L"Back";
+			this->back_button->UseVisualStyleBackColor = true;
+			this->back_button->Visible = false;
+			this->back_button->Click += gcnew System::EventHandler(this, &Form1::back_button_Click);
 			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(753, 479);
+			this->Controls->Add(this->back_button);
 			this->Controls->Add(this->add_button);
 			this->Controls->Add(this->concert_date_label);
 			this->Controls->Add(this->concert_capacity_label);
@@ -365,10 +389,12 @@ namespace CppCLR_WinformsProjekt {
 		concert_date_label->Visible = false;
 		concert_tickets_left_label->Visible = false;
 		add_button->Visible = false;
+		back_button->Visible = false;
 	}
 
 	private: System::Void display_add()
 	{
+		back_button->Visible = true;
 		add_button->Visible = true;
 		concert_name_box->Visible = true;
 		concert_capacity_box->Visible = true;
@@ -394,8 +420,6 @@ namespace CppCLR_WinformsProjekt {
 		}
 		else if (filename != "")
 		{
-			list_1.clear_list();
-
 			while(!fin.eof())
 			{
 				fin >> list_1;
@@ -414,18 +438,81 @@ namespace CppCLR_WinformsProjekt {
 		hide_default();
 	}
 
-	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void add_button_Click(System::Object^  sender, System::EventArgs^  e) {
 
 		std::string conc_name = msclr::interop::marshal_as<std::string>(concert_name_box->Text);
 		std::string conc_tickets_left = msclr::interop::marshal_as<std::string>(concert_tickets_left_box->Text);
 		std::string conc_capacity = msclr::interop::marshal_as<std::string>(concert_capacity_box->Text);
 		std::string conc_date = msclr::interop::marshal_as<std::string>(concert_date_box->Text);
 
-		std::string final_info = conc_name + ";" + conc_capacity + ";" + conc_tickets_left + ";" + conc_date;
-		list_1.add_concert(final_info);
+		if (conc_date == "" || conc_name == "" || conc_tickets_left == "" || conc_capacity == "")
+		{
+			MessageBox::Show("Fill all the fields", "Input warning");
+		}
+		else
+		{
+			std::string final_info = conc_name + ";" + conc_capacity + ";" + conc_tickets_left + ";" + conc_date;
+			list_1.add_concert(final_info);
 
+			MessageBox::Show("Concert was added to the list", "Successful addition");
+
+			concert_name_box->Text = "";
+			concert_tickets_left_box->Text = "";
+			concert_capacity_box->Text = "";
+			concert_date_box->Text = "";
+		}
+	}
+	private: System::Void back_button_Click(System::Object^  sender, System::EventArgs^  e) {
+	
 		redraw_list();
 		display_default();
+	}
+	private: System::Void sort_name_button_Click(System::Object^  sender, System::EventArgs^  e) {
+
+		if (list_1.get_concerts_count() == 0)
+		{
+			MessageBox::Show("You can't sort an empty list", "Invalid sort");
+		}
+		else
+		{
+			list_1.sort_by_name();
+			redraw_list();
+			MessageBox::Show("The list was sorted", "Successful sort");
+		}
+	}
+	private: System::Void sort_date_button_Click(System::Object^  sender, System::EventArgs^  e) {
+
+		if (list_1.get_concerts_count() == 0)
+		{
+			MessageBox::Show("You can't sort an empty list", "Invalid sort");
+		}
+		else
+		{
+			list_1.sort_by_date();
+			redraw_list();
+			MessageBox::Show("The list was sorted", "Successful sort");
+		}
+	}
+	private: System::Void save_button_Click(System::Object^  sender, System::EventArgs^  e) {
+
+		save_file_dialog->ShowDialog();
+
+		std::string filename = msclr::interop::marshal_as<std::string>(save_file_dialog->FileName);
+
+		std::ofstream fout(filename);
+
+		if (!fout.is_open() && filename != "")
+		{
+			MessageBox::Show("No file chosen", "File chooshing warning");
+		}
+		else if (filename != "")
+		{
+			fout << list_1;
+
+			MessageBox::Show("The list was saved to the file", "Successful save");
+		}
+
+		fout.close();
 	}
 };
 }
