@@ -21,6 +21,7 @@ struct concert
 	void get_info(std::string info);
 	void reserve();
 	friend std::ostream& operator<< (std::ostream& out, concert const& conc);
+	std::string take_full_string_info();
 };
 
 class concert_list

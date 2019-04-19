@@ -1,7 +1,3 @@
-// stdafx.cpp : Quelldatei, die nur die Standard-Includes einbindet.
-// CppCLR_WinformsProjekt.pch ist der vorkompilierte Header.
-// stdafx.obj enthält die vorkompilierten Typinformationen.
-
 #include "stdafx.h"
 
 void concert::get_info(std::string info)
@@ -21,7 +17,7 @@ void concert::reserve()
 {
 	if (tickets_left == 0)
 	{
-		throw std::length_error("There are no tickets left for this concert");
+		/*throw std::length_error("There are no tickets left for this concert");*/
 	}
 	else
 	{
@@ -94,8 +90,8 @@ int concert_list::get_concerts_count() const
 
 concert& concert_list::operator[](const int index)
 {
-	if (index >= list_.size() || index < 0)
-		throw std::out_of_range("Invalid index. Out of list range");
+	/*if (index >= list_.size() || index < 0)
+		throw std::out_of_range("Invalid index. Out of list range");*/
 
 	return list_[index];
 }
@@ -143,3 +139,13 @@ std::vector<concert>::iterator concert_list::find_first_date_between(tm const& d
 	});
 }
 
+std::string concert::take_full_string_info()
+{
+	std::string info = name + ";";
+
+	info += std::to_string(capacity) + ";" + std::to_string(tickets_left) + "; ";
+	info += std::to_string(date.tm_year + 1900) + "-" + std::to_string(date.tm_mon) + "-" + std::to_string(date.tm_mday) + " ";
+	info += std::to_string(date.tm_hour) + ":" + std::to_string(date.tm_min);
+
+	return info;
+}

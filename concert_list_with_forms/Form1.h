@@ -55,6 +55,25 @@ namespace CppCLR_WinformsProjekt {
 	private: System::Windows::Forms::Button^  add_button;
 	private: System::Windows::Forms::Button^  back_button;
 	private: System::Windows::Forms::SaveFileDialog^  save_file_dialog;
+	private: System::Windows::Forms::Button^  search_name_button;
+	private: System::Windows::Forms::Button^  search_button;
+	private: System::Windows::Forms::Button^  search_date_button;
+	private: System::Windows::Forms::DateTimePicker^  date_1_pick;
+	private: System::Windows::Forms::DateTimePicker^  date_2_pick;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private: System::ComponentModel::IContainer^  components;
 
@@ -110,6 +129,11 @@ namespace CppCLR_WinformsProjekt {
 			this->add_button = (gcnew System::Windows::Forms::Button());
 			this->back_button = (gcnew System::Windows::Forms::Button());
 			this->save_file_dialog = (gcnew System::Windows::Forms::SaveFileDialog());
+			this->search_name_button = (gcnew System::Windows::Forms::Button());
+			this->search_button = (gcnew System::Windows::Forms::Button());
+			this->search_date_button = (gcnew System::Windows::Forms::Button());
+			this->date_1_pick = (gcnew System::Windows::Forms::DateTimePicker());
+			this->date_2_pick = (gcnew System::Windows::Forms::DateTimePicker());
 			this->SuspendLayout();
 			// 
 			// from_file_button
@@ -313,11 +337,81 @@ namespace CppCLR_WinformsProjekt {
 			this->back_button->Visible = false;
 			this->back_button->Click += gcnew System::EventHandler(this, &Form1::back_button_Click);
 			// 
+			// search_name_button
+			// 
+			this->search_name_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->search_name_button->Location = System::Drawing::Point(32, 284);
+			this->search_name_button->Name = L"search_name_button";
+			this->search_name_button->Size = System::Drawing::Size(134, 42);
+			this->search_name_button->TabIndex = 19;
+			this->search_name_button->Text = L"Search by name";
+			this->search_name_button->UseVisualStyleBackColor = true;
+			this->search_name_button->Click += gcnew System::EventHandler(this, &Form1::search_name_button_Click);
+			// 
+			// search_button
+			// 
+			this->search_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->search_button->Location = System::Drawing::Point(358, 187);
+			this->search_button->Name = L"search_button";
+			this->search_button->Size = System::Drawing::Size(79, 33);
+			this->search_button->TabIndex = 20;
+			this->search_button->Text = L"Search";
+			this->search_button->UseVisualStyleBackColor = true;
+			this->search_button->Visible = false;
+			this->search_button->Click += gcnew System::EventHandler(this, &Form1::search_button_Click);
+			// 
+			// search_date_button
+			// 
+			this->search_date_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->search_date_button->Location = System::Drawing::Point(32, 332);
+			this->search_date_button->Name = L"search_date_button";
+			this->search_date_button->Size = System::Drawing::Size(134, 42);
+			this->search_date_button->TabIndex = 21;
+			this->search_date_button->Text = L"Search by date";
+			this->search_date_button->UseVisualStyleBackColor = true;
+			this->search_date_button->Click += gcnew System::EventHandler(this, &Form1::search_date_button_Click);
+			// 
+			// date_1_pick
+			// 
+			this->date_1_pick->CalendarFont = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+			this->date_1_pick->CustomFormat = L"yyyy-MM-dd HH:mm";
+			this->date_1_pick->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->date_1_pick->Format = System::Windows::Forms::DateTimePickerFormat::Custom;
+			this->date_1_pick->Location = System::Drawing::Point(223, 120);
+			this->date_1_pick->Name = L"date_1_pick";
+			this->date_1_pick->Size = System::Drawing::Size(138, 22);
+			this->date_1_pick->TabIndex = 24;
+			this->date_1_pick->Visible = false;
+			// 
+			// date_2_pick
+			// 
+			this->date_2_pick->CalendarFont = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+			this->date_2_pick->CustomFormat = L"yyyy-MM-dd HH:mm";
+			this->date_2_pick->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->date_2_pick->Format = System::Windows::Forms::DateTimePickerFormat::Custom;
+			this->date_2_pick->Location = System::Drawing::Point(430, 120);
+			this->date_2_pick->Name = L"date_2_pick";
+			this->date_2_pick->Size = System::Drawing::Size(138, 22);
+			this->date_2_pick->TabIndex = 25;
+			this->date_2_pick->Visible = false;
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(753, 479);
+			this->Controls->Add(this->date_2_pick);
+			this->Controls->Add(this->date_1_pick);
+			this->Controls->Add(this->search_date_button);
+			this->Controls->Add(this->search_button);
+			this->Controls->Add(this->search_name_button);
 			this->Controls->Add(this->back_button);
 			this->Controls->Add(this->add_button);
 			this->Controls->Add(this->concert_date_label);
@@ -368,6 +462,8 @@ namespace CppCLR_WinformsProjekt {
 		save_button->Visible = false;
 		list_show_box->Visible = false;
 		list_label->Visible = false;
+		search_name_button->Visible = false;
+		search_date_button->Visible = false;
 	}
 
 	private: System::Void display_default() {
@@ -379,6 +475,8 @@ namespace CppCLR_WinformsProjekt {
 		save_button->Visible = true;
 		list_show_box->Visible = true;
 		list_label->Visible = true;
+		search_name_button->Visible = true;
+		search_date_button->Visible = true;
 
 		concert_name_box->Visible = false;
 		concert_capacity_box->Visible = false;
@@ -390,6 +488,10 @@ namespace CppCLR_WinformsProjekt {
 		concert_tickets_left_label->Visible = false;
 		add_button->Visible = false;
 		back_button->Visible = false;
+		search_button->Visible = false;
+
+		date_1_pick->Visible = false;
+		date_2_pick->Visible = false;
 	}
 
 	private: System::Void display_add()
@@ -405,6 +507,23 @@ namespace CppCLR_WinformsProjekt {
 		concert_date_label->Visible = true;
 		concert_tickets_left_label->Visible = true;
 	}
+
+	private: System::Void display_name_search()
+	{
+		concert_name_box->Visible = true;
+		concert_name_label->Visible = true;
+		search_button->Visible = true;
+		back_button->Visible = true;
+	}
+
+	private: System::Void display_date_search()
+	{
+		date_1_pick->Visible = true;
+		date_2_pick->Visible = true;
+		search_button->Visible = true;
+		back_button->Visible = true;
+	}
+
 
 	private: System::Void from_file_button_Click(System::Object^  sender, System::EventArgs^  e) {
 
@@ -463,7 +582,12 @@ namespace CppCLR_WinformsProjekt {
 		}
 	}
 	private: System::Void back_button_Click(System::Object^  sender, System::EventArgs^  e) {
-	
+		
+		concert_name_box->Text = "";
+		concert_tickets_left_box->Text = "";
+		concert_capacity_box->Text = "";
+		concert_date_box->Text = "";
+
 		redraw_list();
 		display_default();
 	}
@@ -513,6 +637,69 @@ namespace CppCLR_WinformsProjekt {
 		}
 
 		fout.close();
+	}
+	private: System::Void search_name_button_Click(System::Object^  sender, System::EventArgs^  e) {
+
+		display_name_search();
+		hide_default();
+	}
+
+	private: System::Void search_button_Click(System::Object^  sender, System::EventArgs^  e) {
+
+		if (concert_name_box->Visible == true)
+		{
+			std::string concert_name = msclr::interop::marshal_as<std::string>(concert_name_box->Text);
+
+			if (concert_name == "")
+			{
+				MessageBox::Show("Fill the name field", "Name input warning");
+			}
+			else
+			{
+				if (list_1.find_first_name(concert_name) != list_1.end())
+				{
+					concert c = *list_1.find_first_name(concert_name);
+					String^ temp = msclr::interop::marshal_as<String^>(c.take_full_string_info());
+					MessageBox::Show(temp, "Successful search");
+
+					concert_name_box->Text = "";
+				}
+				else
+				{
+					MessageBox::Show("No concerts with this name in the list", "Failed search");
+				}
+			}
+		}
+		else
+		{
+			std::string date_1 = msclr::interop::marshal_as<std::string>(date_1_pick->Text);
+			std::string date_2 = msclr::interop::marshal_as<std::string>(date_2_pick->Text);
+			std::string format = "%Y-%m-%d %H:%M";
+			tm date1, date2;
+
+			std::stringstream ss(date_1);
+			ss >> std::get_time(&date1, format.c_str());
+			ss.clear(); 
+			ss.str(date_2);
+			ss >> std::get_time(&date2, format.c_str());
+
+			if (list_1.find_first_date_between(date1, date2) != list_1.end())
+			{
+				concert c = *list_1.find_first_date_between(date1, date2);
+				String^ temp = msclr::interop::marshal_as<String^>(c.take_full_string_info());
+				MessageBox::Show(temp, "Successful search");
+			}
+			else
+			{
+				MessageBox::Show("No concerts found between theese dates", "Failed search");
+			}
+		}
+	}
+
+	private: System::Void search_date_button_Click(System::Object^  sender, System::EventArgs^  e) {
+
+		hide_default();
+		display_date_search();
 	}
 };
 }
