@@ -17,7 +17,7 @@ void concert::reserve()
 {
 	if (tickets_left == 0)
 	{
-		/*throw std::length_error("There are no tickets left for this concert");*/
+		throw std::length_error("There are no tickets left for this concert");
 	}
 	else
 	{
@@ -27,10 +27,9 @@ void concert::reserve()
 
 std::ostream& operator<< (std::ostream& out, concert const& conc)
 {
+	concert temp = conc;
 
-	out << conc.name << ";" << conc.capacity << ";"
-		<< conc.tickets_left << "; " << conc.date.tm_year + 1900 << "-"
-		<< conc.date.tm_mon + 1 << "-" << conc.date.tm_mday << " " << conc.date.tm_hour << ":" << conc.date.tm_min;
+	out << temp.take_full_string_info();
 
 	return out;
 }
@@ -90,8 +89,8 @@ int concert_list::get_concerts_count() const
 
 concert& concert_list::operator[](const int index)
 {
-	/*if (index >= list_.size() || index < 0)
-		throw std::out_of_range("Invalid index. Out of list range");*/
+	if (index >= list_.size() || index < 0)
+		throw std::out_of_range("Invalid index. Out of list range");
 
 	return list_[index];
 }
@@ -144,8 +143,19 @@ std::string concert::take_full_string_info()
 	std::string info = name + ";";
 
 	info += std::to_string(capacity) + ";" + std::to_string(tickets_left) + "; ";
-	info += std::to_string(date.tm_year + 1900) + "-" + std::to_string(date.tm_mon) + "-" + std::to_string(date.tm_mday) + " ";
-	info += std::to_string(date.tm_hour) + ":" + std::to_string(date.tm_min);
+	info += std::to_string(date.tm_year + 1900) + "-";
+	if (date.tm_mon <= 9)
+		info += "0";
+	info += std::to_string(date.tm_mon) + "-";
+	if (date.tm_mday <= 9)
+		info += "0";
+	info += std::to_string(date.tm_mday) + " ";
+	if (date.tm_hour <= 9)
+		info += "0";
+	info += std::to_string(date.tm_hour) + ":";
+	if (date.tm_min <= 9)
+		info += "0";
+	info += std::to_string(date.tm_min);
 
 	return info;
 }
