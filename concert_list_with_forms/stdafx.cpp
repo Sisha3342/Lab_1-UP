@@ -120,22 +120,50 @@ void concert_list::clear_list()
 	this->list_.clear();
 }
 
-std::vector<concert>::iterator concert_list::find_first_name(std::string const& c_name)
+std::vector<concert> concert_list::find_first_name(std::string const& c_name)
 {
-	return std::find_if(list_.begin(), list_.end(), [&c_name](concert const& c)
+	std::vector<concert>::iterator temp =  std::find_if(list_.begin(), list_.end(), [&c_name](concert const& c)
 	{
 		return c.name == c_name;
 	});
+
+	std::vector<concert> found_concerts;
+
+	while(temp != list_.end())
+	{
+		found_concerts.push_back(*temp);
+
+		temp = std::find_if(++temp, list_.end(), [&c_name](concert const& c)
+		{
+			return c.name == c_name;
+		});
+	}
+
+	return found_concerts;
 }
 
-std::vector<concert>::iterator concert_list::find_first_date_between(tm const& date1, tm const& date2)
+std::vector<concert> concert_list::find_first_date_between(tm const& date1, tm const& date2)
 {
 	tm d1 = date1, d2 = date2;
 
-	return std::find_if(list_.begin(), list_.end(), [&d1, &d2](concert & c)
+	std::vector<concert>::iterator temp = std::find_if(list_.begin(), list_.end(), [&d1, &d2](concert & c)
 	{
 		return (mktime(&d1) <= mktime(&c.date)) && (mktime(&c.date) <= mktime(&d2));
 	});
+
+	std::vector<concert> found_concerts;
+
+	while(temp != list_.end())
+	{
+		found_concerts.push_back(*temp);
+
+		temp = std::find_if(++temp, list_.end(), [&d1, &d2](concert & c)
+		{
+			return (mktime(&d1) <= mktime(&c.date)) && (mktime(&c.date) <= mktime(&d2));
+		});
+	}
+
+	return found_concerts;
 }
 
 std::string concert::take_full_string_info()
@@ -144,9 +172,9 @@ std::string concert::take_full_string_info()
 
 	info += std::to_string(capacity) + ";" + std::to_string(tickets_left) + "; ";
 	info += std::to_string(date.tm_year + 1900) + "-";
-	if (date.tm_mon <= 9)
+	if (date.tm_mon + 1 <= 9)
 		info += "0";
-	info += std::to_string(date.tm_mon) + "-";
+	info += std::to_string(date.tm_mon + 1) + "-";
 	if (date.tm_mday <= 9)
 		info += "0";
 	info += std::to_string(date.tm_mday) + " ";

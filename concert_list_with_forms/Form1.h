@@ -66,6 +66,12 @@ namespace CppCLR_WinformsProjekt {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  tickets_left_column;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  date_column;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  time_column;
+	private: System::Windows::Forms::DataGridView^  search_found_table;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  name_search_col;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  capacity_search_col;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  tick_left_search_col;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  date_search_col;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  time_search_col;
 
 
 
@@ -145,7 +151,14 @@ namespace CppCLR_WinformsProjekt {
 			this->tickets_left_column = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->date_column = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->time_column = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->search_found_table = (gcnew System::Windows::Forms::DataGridView());
+			this->name_search_col = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->capacity_search_col = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->tick_left_search_col = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->date_search_col = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->time_search_col = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->list_show_table))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->search_found_table))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// from_file_button
@@ -304,7 +317,7 @@ namespace CppCLR_WinformsProjekt {
 			// 
 			this->back_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->back_button->Location = System::Drawing::Point(358, 313);
+			this->back_button->Location = System::Drawing::Point(358, 369);
 			this->back_button->Name = L"back_button";
 			this->back_button->Size = System::Drawing::Size(79, 33);
 			this->back_button->TabIndex = 18;
@@ -329,7 +342,7 @@ namespace CppCLR_WinformsProjekt {
 			// 
 			this->search_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->search_button->Location = System::Drawing::Point(358, 187);
+			this->search_button->Location = System::Drawing::Point(358, 140);
 			this->search_button->Name = L"search_button";
 			this->search_button->Size = System::Drawing::Size(79, 33);
 			this->search_button->TabIndex = 20;
@@ -358,7 +371,7 @@ namespace CppCLR_WinformsProjekt {
 			this->date_1_pick->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->date_1_pick->Format = System::Windows::Forms::DateTimePickerFormat::Custom;
-			this->date_1_pick->Location = System::Drawing::Point(223, 120);
+			this->date_1_pick->Location = System::Drawing::Point(232, 97);
 			this->date_1_pick->Name = L"date_1_pick";
 			this->date_1_pick->Size = System::Drawing::Size(138, 22);
 			this->date_1_pick->TabIndex = 24;
@@ -372,7 +385,7 @@ namespace CppCLR_WinformsProjekt {
 			this->date_2_pick->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->date_2_pick->Format = System::Windows::Forms::DateTimePickerFormat::Custom;
-			this->date_2_pick->Location = System::Drawing::Point(430, 120);
+			this->date_2_pick->Location = System::Drawing::Point(430, 97);
 			this->date_2_pick->Name = L"date_2_pick";
 			this->date_2_pick->Size = System::Drawing::Size(138, 22);
 			this->date_2_pick->TabIndex = 25;
@@ -387,7 +400,7 @@ namespace CppCLR_WinformsProjekt {
 				this->name_column,
 					this->capacity_column, this->tickets_left_column, this->date_column, this->time_column
 			});
-			this->list_show_table->Location = System::Drawing::Point(208, 92);
+			this->list_show_table->Location = System::Drawing::Point(208, 86);
 			this->list_show_table->Name = L"list_show_table";
 			this->list_show_table->ReadOnly = true;
 			this->list_show_table->RowTemplate->ReadOnly = true;
@@ -424,11 +437,58 @@ namespace CppCLR_WinformsProjekt {
 			this->time_column->Name = L"time_column";
 			this->time_column->ReadOnly = true;
 			// 
+			// search_found_table
+			// 
+			this->search_found_table->AllowUserToAddRows = false;
+			this->search_found_table->AllowUserToDeleteRows = false;
+			this->search_found_table->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->search_found_table->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {
+				this->name_search_col,
+					this->capacity_search_col, this->tick_left_search_col, this->date_search_col, this->time_search_col
+			});
+			this->search_found_table->Location = System::Drawing::Point(138, 213);
+			this->search_found_table->Name = L"search_found_table";
+			this->search_found_table->ReadOnly = true;
+			this->search_found_table->Size = System::Drawing::Size(545, 150);
+			this->search_found_table->TabIndex = 27;
+			this->search_found_table->Visible = false;
+			// 
+			// name_search_col
+			// 
+			this->name_search_col->HeaderText = L"Name";
+			this->name_search_col->Name = L"name_search_col";
+			this->name_search_col->ReadOnly = true;
+			// 
+			// capacity_search_col
+			// 
+			this->capacity_search_col->HeaderText = L"Capacity";
+			this->capacity_search_col->Name = L"capacity_search_col";
+			this->capacity_search_col->ReadOnly = true;
+			// 
+			// tick_left_search_col
+			// 
+			this->tick_left_search_col->HeaderText = L"Tickets left";
+			this->tick_left_search_col->Name = L"tick_left_search_col";
+			this->tick_left_search_col->ReadOnly = true;
+			// 
+			// date_search_col
+			// 
+			this->date_search_col->HeaderText = L"Date";
+			this->date_search_col->Name = L"date_search_col";
+			this->date_search_col->ReadOnly = true;
+			// 
+			// time_search_col
+			// 
+			this->time_search_col->HeaderText = L"Time";
+			this->time_search_col->Name = L"time_search_col";
+			this->time_search_col->ReadOnly = true;
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(753, 479);
+			this->Controls->Add(this->search_found_table);
 			this->Controls->Add(this->list_show_table);
 			this->Controls->Add(this->date_2_pick);
 			this->Controls->Add(this->date_1_pick);
@@ -452,40 +512,51 @@ namespace CppCLR_WinformsProjekt {
 			this->Name = L"Form1";
 			this->Text = L"Concert agency";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->list_show_table))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->search_found_table))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
 
-	private: System::Void display_concert_message(std::string info)
+	private: System::Void AddToTable(System::Windows::Forms::DataGridView^ table, concert c)
 	{
-		std::string subs[5];
+		std::string c_date = std::to_string(c.date.tm_year + 1900) + "-";
 
-		for (auto i = 0; i < 3; i++)
+		if (c.date.tm_mon + 1 <= 9)
+			c_date += "0";
+		c_date += std::to_string(c.date.tm_mon + 1) + "-";
+
+		if (c.date.tm_mday <= 9)
+			c_date += "0";
+		c_date += std::to_string(c.date.tm_mday) + " ";
+
+		std::string c_time;
+
+		if (c.date.tm_hour <= 9)
+			c_time += "0";
+		c_time += std::to_string(c.date.tm_hour) + ":";
+
+		if (c.date.tm_min <= 9)
+			c_time += "0";
+		c_time += std::to_string(c.date.tm_min);
+
+		String^ concert_name = msclr::interop::marshal_as<String^>(c.name);
+		String^ concert_capacity = msclr::interop::marshal_as<String^>(std::to_string(c.capacity));
+		String^ concert_t_left = msclr::interop::marshal_as<String^>(std::to_string(c.tickets_left));
+		String^ concert_date = msclr::interop::marshal_as<String^>(c_date);
+		String^ concert_time = msclr::interop::marshal_as<String^>(c_time);
+
+		table->Rows->Add(concert_name, concert_capacity, concert_t_left,
+			concert_date, concert_time);
+	}
+
+	private: System::Void display_founded_concerts(std::vector<concert> f_list)
+	{
+		for(int i = 0; i < f_list.size(); i++)
 		{
-			const auto pos = info.find(';');
-			subs[i] = info.substr(0, pos);
-			info.erase(0, pos + 1);
+			AddToTable(search_found_table, f_list[i]);
 		}
-
-		subs[0].insert(0, "Name: ");
-		subs[1].insert(0, "Capacity: ");
-		subs[2].insert(0, "Tickets left: ");
-
-		info.erase(0, 1);
-		const auto pos = info.find(' ');
-		subs[3] = "Date: " + info.substr(0, pos);
-		info.erase(0, pos + 1);
-		subs[4] = "Time: " + info;
-
-		String^ concert_data = msclr::interop::marshal_as<String^>(subs[0]) + Environment::NewLine
-		+ msclr::interop::marshal_as<String^>(subs[1]) + Environment::NewLine
-		+ msclr::interop::marshal_as<String^>(subs[2]) + Environment::NewLine
-		+ msclr::interop::marshal_as<String^>(subs[3]) + Environment::NewLine
-		+ msclr::interop::marshal_as<String^>(subs[4]);
-
-		MessageBox::Show(concert_data, "Successful search");
 	}
 
 
@@ -500,34 +571,7 @@ namespace CppCLR_WinformsProjekt {
 		{
 			concert c; c.get_info(my_str);
 
-			std::string c_date = std::to_string(c.date.tm_year + 1900) + "-";
-
-			if (c.date.tm_mon <= 9)
-				c_date += "0";
-			c_date += std::to_string(c.date.tm_mon) + "-";
-
-			if (c.date.tm_mday <= 9)
-				c_date += "0";
-			c_date += std::to_string(c.date.tm_mday) + " ";
-
-			std::string c_time;
-
-			if (c.date.tm_hour <= 9)
-				c_time += "0";
-			c_time += std::to_string(c.date.tm_hour) + ":";
-
-			if (c.date.tm_min <= 9)
-				c_time += "0";
-			c_time += std::to_string(c.date.tm_min);
-
-			String^ concert_name = msclr::interop::marshal_as<String^>(c.name);
-			String^ concert_capacity = msclr::interop::marshal_as<String^>(std::to_string(c.capacity));
-			String^ concert_t_left = msclr::interop::marshal_as<String^>(std::to_string(c.tickets_left));
-			String^ concert_date = msclr::interop::marshal_as<String^>(c_date);
-			String^ concert_time = msclr::interop::marshal_as<String^>(c_time);
-
-			list_show_table->Rows->Add(concert_name, concert_capacity, concert_t_left, 
-				concert_date, concert_time);
+			AddToTable(list_show_table, c);
 		}
 	}
 
@@ -563,6 +607,7 @@ namespace CppCLR_WinformsProjekt {
 		add_button->Visible = false;
 		back_button->Visible = false;
 		search_button->Visible = false;
+		search_found_table->Visible = false;
 
 		date_1_pick->Visible = false;
 		date_2_pick->Visible = false;
@@ -588,6 +633,7 @@ namespace CppCLR_WinformsProjekt {
 		concert_name_label->Visible = true;
 		search_button->Visible = true;
 		back_button->Visible = true;
+		search_found_table->Visible = true;
 	}
 
 	private: System::Void display_date_search()
@@ -596,6 +642,7 @@ namespace CppCLR_WinformsProjekt {
 		date_2_pick->Visible = true;
 		search_button->Visible = true;
 		back_button->Visible = true;
+		search_found_table->Visible = true;
 	}
 
 
@@ -622,7 +669,6 @@ namespace CppCLR_WinformsProjekt {
 		fin.close();
 
 		redraw_list();
-
 	}
 
 	private: System::Void add_concert_button_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -661,6 +707,7 @@ namespace CppCLR_WinformsProjekt {
 		concert_tickets_left_box->Text = "";
 		concert_capacity_box->Text = "";
 		concert_date_box->Text = "";
+		search_found_table->Rows->Clear();
 
 		redraw_list();
 		display_default();
@@ -694,7 +741,15 @@ namespace CppCLR_WinformsProjekt {
 		hide_default();
 	}
 
+	private: System::Void search_date_button_Click(System::Object^  sender, System::EventArgs^  e) {
+
+		hide_default();
+		display_date_search();
+	}
+
 	private: System::Void search_button_Click(System::Object^  sender, System::EventArgs^  e) {
+
+		search_found_table->Rows->Clear();
 
 		if (concert_name_box->Visible == true)
 		{
@@ -706,11 +761,11 @@ namespace CppCLR_WinformsProjekt {
 			}
 			else
 			{
-				if (list_1.find_first_name(concert_name) != list_1.end())
-				{
-					concert c = *list_1.find_first_name(concert_name);
-					display_concert_message(c.take_full_string_info());
+				std::vector<concert> found_concerts = list_1.find_first_name(concert_name);
 
+				if (!found_concerts.empty())
+				{
+					display_founded_concerts(found_concerts);
 					concert_name_box->Text = "";
 				}
 				else
@@ -724,7 +779,7 @@ namespace CppCLR_WinformsProjekt {
 			std::string date_1 = msclr::interop::marshal_as<std::string>(date_1_pick->Text);
 			std::string date_2 = msclr::interop::marshal_as<std::string>(date_2_pick->Text);
 			std::string format = "%Y-%m-%d %H:%M";
-			tm date1, date2;
+			tm date1{}, date2{};
 
 			std::stringstream ss(date_1);
 			ss >> std::get_time(&date1, format.c_str());
@@ -732,22 +787,17 @@ namespace CppCLR_WinformsProjekt {
 			ss.str(date_2);
 			ss >> std::get_time(&date2, format.c_str());
 
-			if (list_1.find_first_date_between(date1, date2) != list_1.end())
+			std::vector<concert> found_concerts = list_1.find_first_date_between(date1, date2);
+
+			if (!found_concerts.empty())
 			{
-				concert c = *list_1.find_first_date_between(date1, date2);
-				display_concert_message(c.take_full_string_info());
+				display_founded_concerts(found_concerts);
 			}
 			else
 			{
 				MessageBox::Show("No concerts found between theese dates", "Failed search");
 			}
 		}
-	}
-
-	private: System::Void search_date_button_Click(System::Object^  sender, System::EventArgs^  e) {
-
-		hide_default();
-		display_date_search();
 	}
 };
 }
