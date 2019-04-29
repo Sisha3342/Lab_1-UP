@@ -124,7 +124,10 @@ std::vector<concert> concert_list::find_first_name(std::string const& c_name)
 {
 	std::vector<concert>::iterator temp =  std::find_if(list_.begin(), list_.end(), [&c_name](concert const& c)
 	{
-		return c.name == c_name;
+		int len1 = c.name.length(), len2 = c_name.length();
+		int min_len = len1 <= len2 ? len1 : len2;
+
+		return c.name.substr(0, min_len) == c_name.substr(0, min_len);
 	});
 
 	std::vector<concert> found_concerts;
@@ -135,7 +138,10 @@ std::vector<concert> concert_list::find_first_name(std::string const& c_name)
 
 		temp = std::find_if(++temp, list_.end(), [&c_name](concert const& c)
 		{
-			return c.name == c_name;
+			int len1 = c.name.length(), len2 = c_name.length();
+			int min_len = len1 <= len2 ? len1 : len2;
+
+			return c.name.substr(0, min_len) == c_name.substr(0, min_len);
 		});
 	}
 
